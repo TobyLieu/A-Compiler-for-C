@@ -4,4 +4,4 @@
 #include <vector>
 using namespace std;
 
-int main() {}
+void initialize_DFA();
