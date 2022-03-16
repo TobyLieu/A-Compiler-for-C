@@ -3,7 +3,7 @@ using namespace std;
 
 int main() {
     int state = 1, state_before = 0;
-    ifstream in("code.c");
+    ifstream in("demo.c");
     if (!in.is_open()) {
         cout << "File can't be opened!" << endl;
         exit(1);
