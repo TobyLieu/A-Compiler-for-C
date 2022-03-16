@@ -264,8 +264,3 @@ int Lexical_analyzer::state_to_code(int state_before, string token) {
     }
     return -1;
 }
-
-void Lexical_analyzer::store(string token, int code) {
-    pair<string, int> tmp(token, code);
-    tokens.push_back(tmp);
-}

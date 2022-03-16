@@ -31,7 +31,6 @@ int main() {
             in.seekg(-1, ios::cur);
             code = my_lex.state_to_code(state_before, token);
             if (code == -1) break;
-            my_lex.store(token, code);
             out << token << "    ";
             out << setw(2) << setfill('0') << code << endl;
             token = "";
