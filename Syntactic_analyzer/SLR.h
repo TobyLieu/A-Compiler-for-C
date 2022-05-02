@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <iostream>
 #include <queue>
 #include <stack>
 #include <string>
@@ -8,81 +10,61 @@ using namespace std;
 
 typedef int State;
 
+enum ActionKind { Error, Shift, Reduce, Accpet };
 struct Action {
     ActionKind kind;
     int id;
 };  // id is for reduce and shift
-enum ActionKind { Error, Shift, Reduce, Accpet };
 
 typedef unordered_map<string, Action> ActionMap;
 typedef unordered_map<string, State> GotoMap;
 
-const pair<string, string> producers[] = {{"E'", "E"}, E->E + T E->E - T E->T T->T *F T->T / F T->T % F T->F F->N ^ F F->N N->(E)N->i N->+ i N->- i};
-
-class DigitExpressionParser {
+class DigitExpressionParser_SLR {
    private:
     stack<string> entered;
     queue<string> characters;
-    unordered_set<string> T{"(", ")", "-", "+", "*", "/", "num", "$"};
-    unordered_set<string> V{"E", "T", "F"};
+    vector<string> T{"(", ")", "+", "-", "*", "/", "%", "^", "i", ""};
+    vector<string> V{"E", "T", "F", "N"};
     stack<State> states;
     vector<ActionMap> am;
     vector<GotoMap> gm;
+    vector<pair<string, string>> producers = {
+        {"E'", "E"}, 
+        {"E", "E+T"}, 
+        {"E", "E-T"}, 
+        {"E", "T"}, 
+        {"T", "T*F"}, 
+        {"T", "T/F"}, 
+        {"T", "T%F"}, 
+        {"T", "F"}, 
+        {"F", "N^F"}, 
+        {"F", "N"}, 
+        {"N", "(E)"}, 
+        {"N", "i"}, 
+        {"N", "+i"}, 
+        {"N", "-i"}
+    };
 
-    vector<string> lex2Str(string sourceStr);
+    queue<string> lex2Str(string file_name);
     //  function overload for different container to pop numofEle
     void pop(queue<string> &q, int num);
     void pop(stack<string> &s, int num);
     void pop(stack<State> &s, int num);
 
+    // parse to action
+    Action parse2Action(string s);
+
     // initialize parser
-    bool _init(string sourceString);
+    bool _init(string file_name);
 
     // initialize am, gm
-    void initialMaps(vector<ActionMap> &am, vector<GotoMap> &gm);
+    void initialMaps();
+
+    // print action
+    void printProducer(int id);
 
    public:
-    DigitExpressionParser() { initialMaps(am, gm); }
+    DigitExpressionParser_SLR();
     // parse
-    bool parse(string sourseStr) {
-        if (!_init(sourseStr)) {
-            cerr << "Error:source string empty or wrong token" << endl;
-            return false;
-        }
-
-        while (true) {
-            State curState = states.top();
-            string curCharacter = characters.front();
-
-            auto &action = am[curState][curCharacter];
-
-            switch (action.kind) {
-                case Shift:
-                    states.push(action.id);
-                    entered.push(curCharacter);
-                    characters.pop();
-                    break;
-
-                case Reduce: {
-                    // use producer[id] to reduce
-                    printProducer(action.id);
-                    auto producer = producers[action.id];
-                    int popNum = producer.second == "num" ? 1 : producer.second.size();
-                    pop(states, popNum);
-                    pop(entered, popNum);
-                    entered.push(producer.first);
-
-                    states.push(gm[states.top()][producer.first]);
-                } break;
-
-                case Error:
-                    cerr << "Error while parsing" << endl;
-                    return false;
-
-                case Accpet:
-                    cout << "Accepted" << endl;
-                    return true;
-            }
-        }
-    }
+    bool parse(string file_name);
 };
