@@ -87,6 +87,10 @@ bool DigitExpressionParser_LL1::parse(string file_name) {
     string curCharacter = characters.front();
     characters.pop();
     while (true) {
+        if(entered.empty()){
+            cout << "Empty Stack" << endl;
+            return false;
+        }
         string curV = entered.top();
         entered.pop();
         cout << curV << " " << curCharacter << endl;
@@ -97,6 +101,11 @@ bool DigitExpressionParser_LL1::parse(string file_name) {
         }
 
         if (find(V.begin(), V.end(), curV) != V.end()) {
+            if(analysis_map[curV].find(curCharacter) == analysis_map[curV].end()){
+                if (curV == "f") cout << "Missing operator" << endl;
+                else cout << "Missing operand" << endl;
+                return false;
+            }
             string sec = analysis_map[curV][curCharacter];
             push(entered, analysis_map[curV][curCharacter]);
             cout << analysis_map[curV][curCharacter] << endl;
@@ -105,7 +114,8 @@ bool DigitExpressionParser_LL1::parse(string file_name) {
                 curCharacter = characters.front();
                 characters.pop();
             }else{
-                cerr << "Error while parsing" << endl;
+                if (curV == ")") cout << "Missing right parenthesis" << endl;
+                else cout << "Missing left parenthesis" << endl;
                 return false;
             }
         }
