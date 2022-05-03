@@ -37,6 +37,7 @@ queue<string> DigitExpressionParser_SLR::lex2Str(string file_name) {
             state = 1;
         }
     }
+    ans.push("#");
     return ans;
 }
 
@@ -59,6 +60,7 @@ void DigitExpressionParser_SLR::pop(stack<State> &s, int num){
 bool DigitExpressionParser_SLR::_init(string file_name) {
     characters = lex2Str(file_name);
     states.push(0);
+    entered.push("#");
     return true;
 }
 
@@ -171,7 +173,7 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
         string curCharacter = characters.front();
 
         auto &action = am[curState][curCharacter];
-        // cout << curState << " " << curCharacter << " " << action.kind << " " << action.id << endl;
+        cout << curState << " " << curCharacter << " " << action.kind << " " << action.id << endl;
 
         switch (action.kind) {
             case Shift:

@@ -23,7 +23,7 @@ class DigitExpressionParser_SLR {
    private:
     stack<string> entered;
     queue<string> characters;
-    vector<string> T{"(", ")", "+", "-", "*", "/", "%", "^", "i", ""};
+    vector<string> T{"(", ")", "+", "-", "*", "/", "%", "^", "i", "#"};
     vector<string> V{"E", "T", "F", "N"};
     stack<State> states;
     vector<ActionMap> am;
