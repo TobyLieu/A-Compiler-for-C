@@ -1,4 +1,5 @@
 #include "SLR.h"
+
 #include "Lexical_analyzer.h"
 using namespace std;
 
@@ -46,12 +47,12 @@ void DigitExpressionParser_SLR::pop(queue<string> &q, int num) {
         q.pop();
     }
 }
-void DigitExpressionParser_SLR::pop(stack<string> &s, int num){
+void DigitExpressionParser_SLR::pop(stack<string> &s, int num) {
     for (int i = 0; i < num; i++) {
         s.pop();
     }
 }
-void DigitExpressionParser_SLR::pop(stack<State> &s, int num){
+void DigitExpressionParser_SLR::pop(stack<State> &s, int num) {
     for (int i = 0; i < num; i++) {
         s.pop();
     }
@@ -94,31 +95,7 @@ void DigitExpressionParser_SLR::initialMaps() {
     };
 
     const int gotos[25][4] = {
-        {1, 2, 3, 4},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {15, 2, 3, 4},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, 18, 3, 4},
-        {-1, 19, 3, 4},
-        {-1, -1, 20, 4},
-        {-1, -1, 21, 4},
-        {-1, -1, 22, 4},
-        {-1, -1, 24, 4},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
-        {-1, -1, -1, -1},
+        {1, 2, 3, 4}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {15, 2, 3, 4}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, 18, 3, 4}, {-1, 19, 3, 4}, {-1, -1, 20, 4}, {-1, -1, 21, 4}, {-1, -1, 22, 4}, {-1, -1, 24, 4}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1},
     };
 
     for (int i = 0; i < 25; i++) {
@@ -173,7 +150,7 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
         string curCharacter = characters.front();
 
         auto &action = am[curState][curCharacter];
-        cout << curState << " " << curCharacter << " " << action.kind << " " << action.id << endl;
+        // cout << curState << " " << curCharacter << " " << action.kind << " " << action.id << endl;
 
         switch (action.kind) {
             case Shift:
@@ -184,10 +161,10 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
 
             case Reduce: {
                 // use producer[id] to reduce
-                printProducer(action.id - 1);
+                // printProducer(action.id - 1);
                 auto producer = producers[action.id - 1];
                 int popNum = producer.second.size();
-                cout << popNum << endl;
+                // cout << popNum << endl;
                 pop(states, popNum);
                 pop(entered, popNum);
                 entered.push(producer.first);
@@ -196,24 +173,23 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
             } break;
 
             case Error:
-                if(curCharacter == "i"){
+                if (curCharacter == "i") {
                     cout << "Missing operator" << endl;
                     return false;
                 }
 
-                switch (curState)
-                {
-                case 1:
-                    cout << "Missing left parenthesis" << endl;
-                    break;
+                switch (curState) {
+                    case 1:
+                        cout << "Missing left parenthesis" << endl;
+                        break;
 
-                case 15:
-                    cout << "Missing right parenthesis" << endl;
-                    break;
+                    case 15:
+                        cout << "Missing right parenthesis" << endl;
+                        break;
 
-                default:
-                    cout << "Missing operand" << endl;
-                    break;
+                    default:
+                        cout << "Missing operand" << endl;
+                        break;
                 }
                 return false;
 

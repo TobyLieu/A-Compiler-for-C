@@ -1,4 +1,5 @@
 #include "LL1.h"
+
 #include "Lexical_analyzer.h"
 using namespace std;
 
@@ -40,7 +41,7 @@ queue<string> DigitExpressionParser_LL1::lex2Str(string file_name) {
     ans.push("#");
     return ans;
 }
-void DigitExpressionParser_LL1::push(stack<string> &s, string &ss){
+void DigitExpressionParser_LL1::push(stack<string> &s, string &ss) {
     for (int i = ss.size() - 1; i >= 0; i--) {
         s.push(ss.substr(i, 1));
     }
@@ -54,15 +55,7 @@ bool DigitExpressionParser_LL1::_init(string file_name) {
 }
 
 void DigitExpressionParser_LL1::initialMaps() {
-    const int m[7][10] = {
-        {0, 0, 0, -1, -1, -1, -1, -1, 0, -1},
-        {-1, 1, 2, -1, -1, -1, -1, 3, -1, 3},
-        {4, 4, 4, -1, -1, -1, -1, -1, 4, -1},
-        {-1, 8, 8, 5, 6, 7, -1, 8, -1, 8},
-        {9, 9, 9, -1, -1, -1, -1, -1, 9, -1},
-        {-1, 11, 11, 11, 11, 11, 10, 11, -1, 11},
-        {12, 14, 15, -1, -1, -1, -1, -1, 13, -1}
-    };
+    const int m[7][10] = {{0, 0, 0, -1, -1, -1, -1, -1, 0, -1}, {-1, 1, 2, -1, -1, -1, -1, 3, -1, 3}, {4, 4, 4, -1, -1, -1, -1, -1, 4, -1}, {-1, 8, 8, 5, 6, 7, -1, 8, -1, 8}, {9, 9, 9, -1, -1, -1, -1, -1, 9, -1}, {-1, 11, 11, 11, 11, 11, 10, 11, -1, 11}, {12, 14, 15, -1, -1, -1, -1, -1, 13, -1}};
     for (int i = 0; i < 7; i++) {
         unordered_map<string, string> tmp;
         for (int j = 0; j < 10; j++) {
@@ -87,13 +80,13 @@ bool DigitExpressionParser_LL1::parse(string file_name) {
     string curCharacter = characters.front();
     characters.pop();
     while (true) {
-        if(entered.empty()){
+        if (entered.empty()) {
             cout << "Empty Stack" << endl;
             return false;
         }
         string curV = entered.top();
         entered.pop();
-        cout << curV << " " << curCharacter << endl;
+        // cout << curV << " " << curCharacter << endl;
 
         if (curV == "#" && curCharacter == "#") {
             cout << "Accepted" << endl;
@@ -101,21 +94,25 @@ bool DigitExpressionParser_LL1::parse(string file_name) {
         }
 
         if (find(V.begin(), V.end(), curV) != V.end()) {
-            if(analysis_map[curV].find(curCharacter) == analysis_map[curV].end()){
-                if (curV == "f") cout << "Missing operator" << endl;
-                else cout << "Missing operand" << endl;
+            if (analysis_map[curV].find(curCharacter) == analysis_map[curV].end()) {
+                if (curCharacter == "i")
+                    cout << "Missing operator" << endl;
+                else
+                    cout << "Missing operand" << endl;
                 return false;
             }
             string sec = analysis_map[curV][curCharacter];
             push(entered, analysis_map[curV][curCharacter]);
-            cout << analysis_map[curV][curCharacter] << endl;
+            // cout << analysis_map[curV][curCharacter] << endl;
         } else {
             if (curV == curCharacter) {
                 curCharacter = characters.front();
                 characters.pop();
-            }else{
-                if (curV == ")") cout << "Missing right parenthesis" << endl;
-                else cout << "Missing left parenthesis" << endl;
+            } else {
+                if (curV == ")")
+                    cout << "Missing right parenthesis" << endl;
+                else
+                    cout << "Missing left parenthesis" << endl;
                 return false;
             }
         }
