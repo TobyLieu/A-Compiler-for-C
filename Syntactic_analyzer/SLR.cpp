@@ -175,21 +175,12 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
             case Error:
                 if (curCharacter == "i") {
                     cout << "Missing operator" << endl;
-                    return false;
-                }
-
-                switch (curState) {
-                    case 1:
-                        cout << "Missing left parenthesis" << endl;
-                        break;
-
-                    case 15:
-                        cout << "Missing right parenthesis" << endl;
-                        break;
-
-                    default:
-                        cout << "Missing operand" << endl;
-                        break;
+                } else if (curCharacter == ")") {
+                    cout << "Missing left parenthesis" << endl;
+                } else if (curCharacter == "#" && curState == 15) {
+                    cout << "Missing right parenthesis" << endl;
+                } else {
+                    cout << "Missing operand" << endl;
                 }
                 return false;
 
