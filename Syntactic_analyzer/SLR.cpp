@@ -196,7 +196,25 @@ bool DigitExpressionParser_SLR::parse(string file_name) {
             } break;
 
             case Error:
-                cerr << "Error while parsing" << endl;
+                if(curCharacter == "i"){
+                    cout << "Missing operator" << endl;
+                    return false;
+                }
+
+                switch (curState)
+                {
+                case 1:
+                    cout << "Missing left parenthesis" << endl;
+                    break;
+
+                case 15:
+                    cout << "Missing right parenthesis" << endl;
+                    break;
+
+                default:
+                    cout << "Missing operand" << endl;
+                    break;
+                }
                 return false;
 
             case Accpet:
